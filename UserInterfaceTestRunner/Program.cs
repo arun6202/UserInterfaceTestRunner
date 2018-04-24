@@ -7,9 +7,7 @@ namespace XamarinFormsStarterKit.UserInterfaceTestRunner
     {
         static void Main(string[] args)
         {
-
-
-
+            
             AppiumRunner.Execute();
             Console.WriteLine("Reached End!");
             Console.Read();

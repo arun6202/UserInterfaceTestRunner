@@ -5,6 +5,8 @@ using System;
 using System.Threading;
 using System.Collections.Generic;
 using OpenQA.Selenium.Appium.Android;
+using System.IO;
+using System.Reflection;
 
 namespace XamarinFormsStarterKit.UserInterfaceVisualizer
 {
@@ -17,8 +19,7 @@ namespace XamarinFormsStarterKit.UserInterfaceVisualizer
 
         public static TimeSpan INIT_TIMEOUT_SEC = TimeSpan.FromSeconds(180);
         public static TimeSpan IMPLICIT_TIMEOUT_SEC = TimeSpan.FromSeconds(5);
-
-
+        private static string AppPath = "";
 
 
         public static void Execute()
@@ -26,9 +27,26 @@ namespace XamarinFormsStarterKit.UserInterfaceVisualizer
             Console.WriteLine("Starting Program...");
             Console.WriteLine(DateTime.Now);
 
+            var appName = "XamlPlayground.iOS.app";
+            var appLocation = @"../../../../../../";
+            var appExecutingPath = @"XamlPlayground/XamlPlayground.iOS/bin/iPhoneSimulator/Release/";
+
+            var projectLocation = Path.GetDirectoryName(typeof(AppiumRunner).Assembly.Location);
+            var projectRoot = Path.GetFullPath(Path.Combine(Assembly.GetExecutingAssembly().Location,appLocation ));
+
+            AppPath = Path.Combine(projectRoot,appExecutingPath);
+            AppPath = Path.Combine(AppPath, appName);
+             
+            // 
+            Console.WriteLine("Copying app file");
+
+            var destinationFile = Path.Combine(projectLocation, appName);
+
+           // File.Copy(appPath,destinationFile , true);
+
+            Console.WriteLine("Copied app file");
+
             CreateIOSSimulatorAndScreenshots();
-
-
             // CreateAndroidSimulatorAndScreenshots();
 
             Console.WriteLine(DateTime.Now);
@@ -53,14 +71,14 @@ namespace XamarinFormsStarterKit.UserInterfaceVisualizer
                 capabilities.SetCapability("platformVersion", "11.3");
                 capabilities.SetCapability("deviceName", device);
                 capabilities.SetCapability("platformName", "iOS");
-                capabilities.SetCapability("newCommandTimeout", "120");
-                capabilities.SetCapability("noReset", "true");
-                capabilities.SetCapability("printPageSourceOnFindFailure", "true");
-                capabilities.SetCapability("enablePerformanceLogging", "true");
+               // capabilities.SetCapability("newCommandTimeout", "120");
+               // capabilities.SetCapability("noReset", "true");
+              //  capabilities.SetCapability("printPageSourceOnFindFailure", "true");
+               // capabilities.SetCapability("enablePerformanceLogging", "true");
                 capabilities.SetCapability("automationName", "XCUITest");
-                capabilities.SetCapability("app", "/Users/arunbalakrishnan/XamlPlayground/XamlPlayground.iOS/bin/iPhoneSimulator/Debug/device-builds/iphone10.3-11.3/XamlPlayground.iOS.app");
+                capabilities.SetCapability("app", AppPath);
 
-                Uri serverUri = new Uri("https://0.0.0.0:4723/wd/hub");
+                Uri serverUri = new Uri("http://localhost:4723/wd/hub");
                 iosDriver = new IOSDriver<IOSElement>(serverUri, capabilities, INIT_TIMEOUT_SEC);
                 iosDriver.Manage().Timeouts().ImplicitWait = INIT_TIMEOUT_SEC;
 
