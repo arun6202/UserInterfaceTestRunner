@@ -43,15 +43,15 @@ namespace XamarinFormsStarterKit.UserInterfaceVisualizer
 			var destinationFile = Path.Combine(projectLocation, appName);
 
 			var documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-                   
-            
-         //   fix this please 
-		//	File.Copy(AppPath,destinationFile , true);
+
+
+			//   fix this please 
+			//	File.Copy(AppPath,destinationFile , true);
 
 			Console.WriteLine("Copied app file");
 
-			CreateIOSSimulatorAndScreenshots();
-			// CreateAndroidSimulatorAndScreenshots();
+			//CreateIOSSimulatorAndScreenshots();
+			 CreateAndroidSimulatorAndScreenshots();
 
 			Console.WriteLine(DateTime.Now);
 
@@ -105,27 +105,42 @@ namespace XamarinFormsStarterKit.UserInterfaceVisualizer
 		private static void CreateAndroidSimulatorAndScreenshots()
 		{
 
-			DesiredCapabilities capabilities = new DesiredCapabilities();
-			capabilities.SetCapability("platformVersion", "6.0");
-			capabilities.SetCapability("deviceName", "Android_Accelerated_x86");
-			capabilities.SetCapability("avd", "Android_Accelerated_x86");
-			capabilities.SetCapability("platformName", "Android");
-			capabilities.SetCapability("automationName", "UiAutomator2");
-			capabilities.SetCapability("app", "/Users/arunbalakrishnan/Desktop/com.companyname.XamarinFormsStarterKit-x86.apk");
+			foreach (var device in DeviceListOnlyAndroidPhoneEdgeCases)
+			{
+				Console.WriteLine("Opening... " + device);
 
-			Uri serverUri = new Uri("http://0.0.0.0:4723/wd/hub");
-			droiddriver = new AndroidDriver<AndroidElement>(serverUri, capabilities, INIT_TIMEOUT_SEC);
-			droiddriver.Manage().Timeouts().ImplicitWait = INIT_TIMEOUT_SEC;
+				Console.WriteLine(DateTime.Now);
 
-			Console.WriteLine("taking screenshot... " + "Nexus_Edited_6_API_27");
+				DesiredCapabilities capabilities = new DesiredCapabilities();
 
-			var fileName = String.Format("{0}{1}{2}{3}", "Screenshots/", "Pixel 2 API 26" + " ", DateTime.Now.ToString("dd HH mm ss"), ".png");
-			var screenShot = droiddriver.GetScreenshot();
-			screenShot.SaveAsFile(fileName);
+				capabilities.SetCapability("platformVersion", "8.0");
+				capabilities.SetCapability("deviceName", "Android_Accelerated_x86");
+				capabilities.SetCapability("avd", device);
+				capabilities.SetCapability("platformName", "Android");
+				capabilities.SetCapability("automationName", "UiAutomator2");
 
+				capabilities.SetCapability("app", "/Users/arunbalakrishnan/Desktop/com.droidtest1.ew-x86.apk");
 
-			droiddriver.Quit();
-			Console.WriteLine(DateTime.Now);
+			   //capabilities.SetCapability("app", AppPath);
+
+				Uri serverUri = new Uri("http://localhost:4723/wd/hub");
+				iosDriver = new IOSDriver<IOSElement>(serverUri, capabilities, INIT_TIMEOUT_SEC);
+				iosDriver.Manage().Timeouts().ImplicitWait = INIT_TIMEOUT_SEC;
+
+				Thread.Sleep(5000);
+
+				Console.WriteLine("taking screenshot... " + device);
+
+				var fileName = String.Format("{0}{1}{2}{3}", "Screenshots/", "ios/", device, ".png");
+				var screenShot = iosDriver.GetScreenshot();
+				screenShot.SaveAsFile(fileName);
+
+				Console.WriteLine("Shutting down... " + device);
+
+				droiddriver.Quit();
+				Console.WriteLine(DateTime.Now);
+
+			}
 
 		}
 
@@ -192,6 +207,21 @@ namespace XamarinFormsStarterKit.UserInterfaceVisualizer
 		iPhone8p ,
 		iPhoneSE ,
 		};
+
+		public static string android720_1280_5 = "560_1080_1920";
+        public static string android1080_1920_5_2 = "n1";
+        public static string android1440_2560_5_8 = "Android_Accelerated_x86";
+        public static string android1440_2560_6_2 = "Pixel_Accelerated_Nougat";
+
+
+		public static List<string> DeviceListOnlyAndroidPhoneEdgeCases = new List<string>
+		{
+			android720_1280_5,
+			android1080_1920_5_2 ,
+			android1440_2560_5_8 ,
+			android1440_2560_6_2 ,
+		};
+
 
 
 		//android
