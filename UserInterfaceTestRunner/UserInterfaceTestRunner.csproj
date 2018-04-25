@@ -13,5 +13,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove=".gitignore" />
+    <None Remove="Screenshots\iosiPhone X 24 20 05 02.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Screenshots\" />
+    <Folder Include="Screenshots\ios\" />
+    <Folder Include="Screenshots\android\" />
   </ItemGroup>
 </Project>
